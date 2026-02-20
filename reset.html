@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Reset Password</title>
+<style>
+body{font-family:Arial;background:#f4f6f9;}
+.box{width:350px;margin:100px auto;background:white;padding:20px;border-radius:8px;}
+input,button{width:100%;padding:10px;margin:8px 0;}
+button{background:#1e293b;color:white;border:none;}
+.error{color:red;font-size:14px;}
+</style>
+</head>
+
+<body>
+
+<div class="box">
+<h3>Reset Password</h3>
+
+<input type="text" id="otp" placeholder="Enter OTP">
+<input type="password" id="newPass" placeholder="New Password">
+<input type="password" id="confirmPass" placeholder="Confirm Password">
+
+<p class="error" id="msg"></p>
+
+<button onclick="resetPassword()">Reset Password</button>
+</div>
+
+<script>
+function resetPassword(){
+    const enteredOTP = document.getElementById("otp").value;
+    const newPass = document.getElementById("newPass").value;
+    const confirmPass = document.getElementById("confirmPass").value;
+
+    const storedOTP = localStorage.getItem("resetOTP");
+
+    if(enteredOTP !== storedOTP){
+        document.getElementById("msg").innerText = "Invalid OTP";
+        return;
+    }
+
+    if(newPass !== confirmPass){
+        document.getElementById("msg").innerText = "Passwords do not match";
+        return;
+    }
+
+    localStorage.setItem("password", newPass);
+    alert("Password reset successful!");
+
+    window.location.href = "login.html";
+}
+</script>
+
+</body>
+</html>

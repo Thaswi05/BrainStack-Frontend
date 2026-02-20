@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PLACEMENT PRO - Combined Dashboard</title>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: #f4f6f9;
+    margin: 0;
+    padding: 20px;
+}
+
+/* Main Heading */
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #1f2a40;
+    font-size: 36px;
+}
+
+/* Container for two main columns */
+.container {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap; /* responsive */
+}
+
+/* Column Styling */
+.column {
+    flex: 1;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    min-width: 400px;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+/* Card styling for ENT Officer */
+.card {
+    background: #fff;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+}
+
+input, select, textarea, button {
+    padding: 8px;
+    margin: 5px 0 10px 0;
+    width: 100%;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+button {
+    cursor: pointer;
+    background: #273c75;
+    color: #fff;
+    border: none;
+}
+
+button:hover {
+    background: #192a56;
+}
+
+/* ENT Officer output boxes */
+.output {
+    background: #dcdde1;
+    padding: 10px;
+    border-radius: 4px;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+/* Jobs Dashboard */
+.job-card {
+    background:white;
+    padding:15px;
+    margin-bottom:15px;
+    border-radius:8px;
+    box-shadow:0 0 6px rgba(0,0,0,0.1);
+}
+.apply-btn {
+    background:#27ae60;
+}
+.apply-btn:hover {
+    background:#1e8449;
+}
+
+/* Job Application stages */
+.stage {
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+    background: #eef2f7;
+}
+.reminder {
+    color: red;
+    font-weight: bold;
+}
+.success {
+    color: green;
+    font-weight: bold;
+}
+
+/* Scrollbar for columns */
+.column::-webkit-scrollbar {
+    width: 6px;
+}
+.column::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 3px;
+}
+.column::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+</style>
+</head>
+<body>
+
+<h1>PLACEMENT PRO</h1>
+
+<div class="container">
+
+<!-- Column 1: ENT / Placement Officer Dashboard -->
+<div class="column">
+  <h2>Placement Officer Dashboard</h2>
+
+  <div class="card">
+    <h3>Create Drive & Check Eligible Students</h3>
+
+    <input type="text" id="driveName" placeholder="Enter Drive Name">
+    <input type="number" id="minCGPA" placeholder="Minimum CGPA (≥7)" min="7" max="10">
+    <input type="number" id="maxBacklogs" placeholder="Maximum Backlogs (0)" min="0">
+    <select id="branchSelect">
+      <option value="">Select Branch</option>
+      <option>CS</option>
+      <option>MCA</option>
+    </select>
+    <label><b>Skill Requirement</b></label>
+    <select id="skillRequirement">
+      <option value="">Select Skill / Language</option>
+      <option>DSA</option>
+      <option>OOP</option>
+      <option>Web Development</option>
+      <option>Mobile App Development</option>
+      <option>AI</option>
+      <option>Machine Learning</option>
+      <option>Data Science</option>
+      <option>Cloud</option>
+      <option>DevOps</option>
+      <option>Cyber Security</option>
+      <option>Blockchain</option>
+      <option>Java</option>
+      <option>Python</option>
+      <option>C</option>
+      <option>C++</option>
+      <option>JavaScript</option>
+      <option>TypeScript</option>
+      <option>Go</option>
+      <option>Kotlin</option>
+      <option>SQL</option>
+    </select>
+
+    <button onclick="createDrive()">Create Drive & Check Eligible Students</button>
+    <div class="output" id="eligibleOutput"></div>
+    <button onclick="notifyEligible()">Notify All Eligible Students</button>
+  </div>
+
+  <div class="card">
+    <h3>Interview Scheduler</h3>
+    <select id="eligibleStudentSelect">
+      <option value="">Select Student</option>
+    </select>
+    <input type="datetime-local" id="interviewSlot">
+    <button onclick="scheduleInterview()">Schedule Interview</button>
+    <div class="output" id="scheduleOutput"></div>
+  </div>
+</div>
+
+<!-- Column 2: Student Dashboard & Jobs -->
+<div class="column">
+  <h2>Student Dashboard & Jobs</h2>
+
+  <div class="card">
+    <h3>Personal Details & Projects</h3>
+    <form onsubmit="sendToBackend(event)">
+        <label>Name</label>
+        <input type="text" id="name" value="Shreya Shetty" required>
+        <label>Email</label>
+        <input type="email" id="email" value="shreya@example.com" required>
+        <label>Phone</label>
+        <input type="tel" id="phone" value="+91-9876543210" required>
+        <label>Education</label>
+        <textarea id="education">B.Tech in Artificial Intelligence, XYZ University</textarea>
+        <label>Experience</label>
+        <textarea id="experience">Interned at ABC Tech as AI Developer for 6 months</textarea>
+        <h3>Project Details</h3>
+        <input type="text" id="projectTitle" value="AI Mental Health Assistant" placeholder="Project Title">
+        <textarea id="projectDescription">Developed an AI-based system using GSR and heart rate sensors to monitor mental health and suggest interventions.</textarea>
+        <h3>Skills & Personality</h3>
+        <label>Communication</label>
+        <select id="communication">
+          <option selected>Excellent</option>
+          <option>Good</option>
+          <option>Average</option>
+        </select>
+        <label>Teamwork</label>
+        <select id="teamwork">
+          <option selected>Good</option>
+          <option>Average</option>
+          <option>Poor</option>
+        </select>
+        <label>Leadership</label>
+        <select id="leadership">
+          <option selected>High</option>
+          <option>Medium</option>
+          <option>Low</option>
+        </select>
+        <button type="submit">Request Resume</button>
+    </form>
+    <br>
+    <button id="downloadBtn" style="display:none;" onclick="downloadResume()">Download Resume (PDF)</button>
+  </div>
+
+  <div class="card">
+    <h3>Jobs Dashboard</h3>
+    <label>Designation:</label>
+    <input type="text" id="designation" placeholder="Enter Designation">
+    <label>Select LPA:</label>
+    <select id="lpaFilter">
+      <option value="">All</option>
+      <option value="4">4 LPA</option>
+      <option value="8">8 LPA</option>
+      <option value="12">12 LPA</option>
+      <option value="15">15 LPA</option>
+      <option value="20">20 LPA</option>
+      <option value="25">25 LPA</option>
+      <option value="30">30 LPA</option>
+      <option value="40">40 LPA</option>
+    </select>
+    <button onclick="filterJobs()">Search</button>
+    <div id="jobList"></div>
+  </div>
+
+  <div class="card">
+    <h3>My Job Applications</h3>
+    <p><b>Application Status:</b> <span id="status">Aptitude Test Scheduled</span></p>
+
+    <div class="stage">
+      <h4>Aptitude Test</h4>
+      <p class="reminder">Reminder: Your Aptitude Test is on <b>25 March 2026</b> at <b>10:00 AM</b></p>
+      <p id="aptitudeStatus">Status: Pending</p>
+      <button onclick="completeAptitude()">Complete Aptitude Test</button>
+    </div>
+
+    <div class="stage">
+      <h4>Technical Interview</h4>
+      <p id="techReminder"></p>
+      <p id="techStatus">Status: Not Started</p>
+      <button onclick="completeTechnical()">Complete Technical Interview</button>
+    </div>
+
+    <div class="stage">
+      <h4>HR Interview</h4>
+      <p id="hrReminder"></p>
+      <p id="hrStatus">Status: Not Started</p>
+      <button onclick="completeHR()">Complete HR Interview</button>
+    </div>
+
+    <h4 id="finalResult"></h4>
+  </div>
+
+</div>
+
+</div>
+
+<script>
+// ================= ENT Officer Dashboard Script =================
+const students = [
+  { name:'Alice', cgpa:8, backlogs:0, branch:'CS', skills:['DSA','Web Development','Java','Python'] },
+  { name:'Bob', cgpa:7.5, backlogs:0, branch:'CS', skills:['Cloud','DevOps','Python'] },
+  { name:'Charlie', cgpa:9, backlogs:0, branch:'MCA', skills:['AI','Machine Learning','Python','C++'] },
+  { name:'David', cgpa:6.5, backlogs:0, branch:'ECE', skills:['DSA','Java'] }
+];
+
+let eligibleStudents = [];
+let interviews = [];
+
+function createDrive() {
+  const drive = document.getElementById('driveName').value;
+  const minCGPA = parseFloat(document.getElementById('minCGPA').value);
+  const maxBacklogs = parseInt(document.getElementById('maxBacklogs').value);
+  const branch = document.getElementById('branchSelect').value;
+  const skillRequirement = document.getElementById('skillRequirement').value;
+
+  if (!drive || isNaN(minCGPA) || isNaN(maxBacklogs) || !branch) {
+    alert("Please fill mandatory fields correctly.");
+    return;
+  }
+
+  eligibleStudents = students.filter(s =>
+    s.cgpa >= minCGPA &&
+    s.backlogs <= maxBacklogs &&
+    s.branch === branch &&
+    (!skillRequirement || s.skills.includes(skillRequirement))
+  );
+
+  const output = document.getElementById('eligibleOutput');
+
+  if(eligibleStudents.length === 0){
+    output.innerHTML = "<b>No eligible students found!</b>";
+    document.getElementById('eligibleStudentSelect').innerHTML = '<option value="">Select Student</option>';
+    return;
+  }
+
+  output.innerHTML = `<b>${eligibleStudents.length} Students Eligible</b><br>` +
+                     eligibleStudents.map(s => s.name).join('<br>');
+
+  const select = document.getElementById('eligibleStudentSelect');
+  select.innerHTML = '<option value="">Select Student</option>';
+
+  eligibleStudents.forEach(s => {
+    const option = document.createElement('option');
+    option.value = s.name;
+    option.text = s.name;
+    select.appendChild(option);
+  });
+}
+
+function notifyEligible() {
+  if(eligibleStudents.length === 0){
+    alert("No eligible students to notify!");
+    return;
+  }
+  alert(`Notifications sent to ${eligibleStudents.length} eligible students.`);
+}
+
+function scheduleInterview() {
+  const studentName = document.getElementById('eligibleStudentSelect').value;
+  const slot = document.getElementById('interviewSlot').value;
+
+  if(!studentName || !slot){
+    alert("Select student and slot!");
+    return;
+  }
+
+  if(interviews.some(i => i.slot === slot)){
+    alert("Slot already booked!");
+    return;
+  }
+
+  interviews.push({student: studentName, slot: slot});
+  document.getElementById('scheduleOutput').innerHTML =
+    interviews.map(i => `${i.student} → ${i.slot}`).join('<br>');
+}
+
+// ================= Student Dashboard Script =================
+// Resume generation simulation
+function sendToBackend(event) {
+    event.preventDefault();
+    alert("Resume request submitted! (Simulation)");
+    document.getElementById("downloadBtn").style.display = "block";
+}
+function downloadResume() {
+    alert("Simulating resume download (PDF).");
+}
+
+// Jobs Dashboard
+const jobs = [
+{company:"TCS", role:"Software Engineer", lpa:4},
+{company:"Infosys", role:"System Engineer", lpa:3.5},
+{company:"Wipro", role:"Software Developer", lpa:4.2},
+{company:"Accenture", role:"Cloud Engineer", lpa:8},
+{company:"Capgemini", role:"Business Analyst", lpa:6},
+{company:"Cognizant", role:"Python Developer", lpa:6},
+{company:"HCL", role:"DevOps Engineer", lpa:10},
+{company:"Tech Mahindra", role:"Frontend Developer", lpa:6},
+{company:"Amazon", role:"Cloud Engineer", lpa:15},
+{company:"Amazon", role:"Data Scientist", lpa:22},
+{company:"Google", role:"Software Engineer", lpa:25},
+{company:"Google", role:"ML Engineer", lpa:30},
+{company:"Microsoft", role:"AI Engineer", lpa:24},
+{company:"Meta", role:"Data Scientist", lpa:35},
+{company:"Netflix", role:"Cloud Architect", lpa:40},
+{company:"Oracle", role:"Database Administrator", lpa:12},
+{company:"SAP", role:"SAP Consultant", lpa:14},
+{company:"IBM", role:"AI Developer", lpa:14},
+{company:"Flipkart", role:"Product Analyst", lpa:11},
+{company:"Paytm", role:"Backend Developer", lpa:12},
+{company:"Zoho", role:"Full Stack Developer", lpa:10},
+{company:"Swiggy", role:"DevOps Engineer", lpa:13},
+{company:"Byjus", role:"ML Engineer", lpa:15}
+];
+
+function filterJobs(){
+  let designation = document.getElementById("designation").value.toLowerCase();
+  let selectedLpa = document.getElementById("lpaFilter").value;
+  let filtered = jobs.filter(job => job.role.toLowerCase().includes(designation));
+  if(selectedLpa !== ""){
+    filtered = filtered.filter(job => job.lpa == selectedLpa);
+  }
+  displayJobs(filtered);
+}
+
+function displayJobs(list){
+  let jobList = document.getElementById("jobList");
+  jobList.innerHTML = "";
+  if(list.length === 0){
+    jobList.innerHTML = "<p>No Jobs Found</p>";
+    return;
+  }
+  list.forEach(job=>{
+    jobList.innerHTML += `
+      <div class="job-card">
+      <h4>${job.company}</h4>
+      <p><strong>Posting:</strong> ${job.role}</p>
+      <p><strong>LPA:</strong> ${job.lpa} LPA</p>
+      <button class="apply-btn" onclick="applyJob()">Apply</button>
+      </div>
+    `;
+  });
+}
+function applyJob(){ alert("Application Submitted Successfully!"); }
+displayJobs(jobs);
+
+// Job Application Status
+let aptitudeDone = false;
+let techDone = false;
+let hrDone = false;
+
+function completeAptitude() {
+    aptitudeDone = true;
+    document.getElementById("aptitudeStatus").innerHTML = "Status: Completed Successfully on 25 March 2026 - 11:30 AM";
+    document.getElementById("status").innerHTML = "Aptitude Cleared - Technical Interview Scheduled";
+    document.getElementById("techReminder").innerHTML = "<span class='reminder'>Reminder: Technical Interview on 27 March 2026 at 2:00 PM</span>";
+}
+
+function completeTechnical() {
+    if (!aptitudeDone) { alert("Complete Aptitude Test First!"); return; }
+    techDone = true;
+    document.getElementById("techStatus").innerHTML = "Status: Completed Successfully on 27 March 2026 - 3:15 PM";
+    document.getElementById("status").innerHTML = "Technical Cleared - HR Interview Scheduled";
+    document.getElementById("hrReminder").innerHTML = "<span class='reminder'>Reminder: HR Interview on 29 March 2026 at 11:00 AM</span>";
+}
+
+function completeHR() {
+    if (!techDone) { alert("Complete Technical Interview First!"); return; }
+    hrDone = true;
+    document.getElementById("hrStatus").innerHTML = "Status: Completed Successfully on 29 March 2026 - 12:00 PM";
+    document.getElementById("status").innerHTML = "All Rounds Completed";
+    document.getElementById("finalResult").innerHTML = "<span class='success'>🎉 Congratulations! You have cleared all stages and have been approved for the job.</span>";
+}
+</script>
+
+</body>
+</html>
